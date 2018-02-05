@@ -336,6 +336,10 @@ class ElaraRenderEngine(bpy.types.RenderEngine):
             self.end_result(result)
             lock.release()
 
+        result = self.begin_result(0, 0, self.size_x, self.size_y)
+        layer = result.layers[0].passes["Combined"]
+        layer.rect = blue_rect
+        self.end_result(result)
         elara.ei_render_cleanup()
         elara.ei_job_set_process(None)
         elara.ei_end_context()

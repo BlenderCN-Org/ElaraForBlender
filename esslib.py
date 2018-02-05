@@ -169,7 +169,7 @@ class EssExporter:
 
         instName = elementName + "_inst"
         self.writer.BeginNode("instance", instName)
-        self.writer.AddBool("visible_primary", True)
+        self.writer.AddBool("visible_primary", False)
         self.writer.AddBool("cast_shadow", True)
         self.writer.AddRef("element", elementName + "_light")
         self.writer.AddMatrix("transform", obj.matrix_world)
