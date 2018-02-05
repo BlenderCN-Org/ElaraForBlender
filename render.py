@@ -237,7 +237,7 @@ class ElaraRenderEngine(bpy.types.RenderEngine):
         global blue_rect
         global lock
 
-        elara_directory = bpy.context.user_preferences.addons["elara"].preferences.elara_directory
+        elara_directory = bpy.context.user_preferences.addons["ElaraForBlender"].preferences.elara_directory
         print(elara_directory)
 
         lock = threading.Lock()
