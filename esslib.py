@@ -116,7 +116,7 @@ class EssExporter:
         mesh = obj.to_mesh(scene, True, 'RENDER', calc_tessface=True)
         
         elementName = obj.name
-        self.writer.BeginNode("poly", elementName)
+        self.writer.BeginNode("poly", elementName + "_ply")
         self.writer.AddPointList("pos_list", mesh.vertices)
         self.writer.AddIndexList("triangle_list", mesh.tessfaces)
         self.writer.EndNode()
@@ -125,7 +125,7 @@ class EssExporter:
         mtl_list = [matName]
         self.writer.BeginNode("instance", instName)
         self.writer.AddRefGroup("mtl_list", mtl_list)
-        self.writer.AddRef("element", elementName)
+        self.writer.AddRef("element", elementName + "_ply")
         self.writer.AddMatrix("transform", obj.matrix_world)
         self.writer.AddMatrix("motion_transform", obj.matrix_world)
         self.writer.EndNode()
@@ -151,7 +151,7 @@ class EssExporter:
         elementName = obj.name
 
         lamp = obj.data
-        self.writer.BeginNode("quadlight", elementName)
+        self.writer.BeginNode("quadlight", elementName + "_light")
         self.writer.AddScaler("intensity", lamp.energy)
         self.writer.AddColor("color", lamp.color)
         self.writer.AddScaler("width", lamp.size)
@@ -168,7 +168,7 @@ class EssExporter:
         self.writer.BeginNode("instance", instName)
         self.writer.AddBool("visible_primary", True)
         self.writer.AddBool("cast_shadow", True)
-        self.writer.AddRef("element", elementName)
+        self.writer.AddRef("element", elementName + "_light")
         self.writer.AddMatrix("transform", obj.matrix_world)
         self.writer.AddMatrix("motion_transform", obj.matrix_world)
         self.writer.EndNode()
@@ -179,7 +179,7 @@ class EssExporter:
         elementName = obj.name
 
         lamp = obj.data
-        self.writer.BeginNode("pointlight", elementName)
+        self.writer.BeginNode("pointlight", elementName + "_light")
         self.writer.AddScaler("intensity", lamp.energy)
         self.writer.AddColor("color", lamp.color)
         self.writer.AddInt("volume_samples", 16)
@@ -189,7 +189,7 @@ class EssExporter:
         self.writer.BeginNode("instance", instName)
         self.writer.AddBool("visible_primary", True)
         self.writer.AddBool("cast_shadow", True)
-        self.writer.AddRef("element", elementName)
+        self.writer.AddRef("element", elementName + "_light")
         self.writer.AddMatrix("transform", obj.matrix_world)
         self.writer.AddMatrix("motion_transform", obj.matrix_world)
         self.writer.EndNode()
@@ -207,7 +207,7 @@ class EssExporter:
         elara_mat = material.elara_mat
         shaderName = material.name
 
-        self.writer.BeginNode("max_ei_standard", shaderName)
+        self.writer.BeginNode("max_ei_standard", shaderName + "_std")
         self.writer.AddColor("diffuse_color", elara_mat.diffuse_color)
         self.writer.AddScaler("diffuse_weight", elara_mat.diffuse_weight)
         self.writer.AddScaler("roughness", elara_mat.roughness)
@@ -236,7 +236,7 @@ class EssExporter:
 
 
         self.writer.BeginNode("max_result", shaderName + "_result")
-        self.writer.LinkParam("input", shaderName, "result")
+        self.writer.LinkParam("input", shaderName + "_std", "result")
         self.writer.EndNode();
 
         shaderNames = [shaderName + "_result"]
