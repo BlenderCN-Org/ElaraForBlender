@@ -116,6 +116,9 @@ def rprocess_job_finished(process, job, job_state, threadId):
         return
     pJob = c.cast(elara.ei_db_access(job), c.POINTER(eiBucketJob))
 
+    if pJob.contents.pass_id <= -5:
+        return
+
     infoFrameBufferCache = eiFrameBufferCache()
     colorFrameBufferCache = eiFrameBufferCache()
 
