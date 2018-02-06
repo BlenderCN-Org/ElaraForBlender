@@ -113,7 +113,8 @@ class EssExporter:
         name = obj.name
         obj.dupli_list_create(scene)
         for dupli in obj.dupli_list:
-            self.AddMeshObj(dupli.object, scene, name + ':' + dupli.object.name, dupli.matrix)
+            if dupli.object.type == 'MESH':
+                self.AddMeshObj(dupli.object, scene, name + ':' + dupli.object.name, dupli.matrix)
         obj.dupli_list_clear()
 
     def AddBlenderObj(self, obj, scene):
@@ -220,7 +221,13 @@ class EssExporter:
             return "GlobalMaterial"
 
         material = obj.material_slots[0].material
+
+        if material == None:
+            print("Error Material Obj:%s Num Slot:%d"%(obj.name, len(obj.material_slots)))
+            return "GlobalMaterial"
+
         elara_mat = material.elara_mat
+
         shaderName = material.name
 
         self.writer.BeginNode("max_ei_standard", shaderName + "_std")

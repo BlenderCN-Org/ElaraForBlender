@@ -16,7 +16,6 @@ from . import ui
 
 class ElaraAddonPanel(bpy.types.AddonPreferences):
     bl_idname = __package__
-    print(__package__)
 
     elara_directory = bpy.props.StringProperty(name="Elara SDK Directory", subtype='DIR_PATH', default="")
 
@@ -27,13 +26,8 @@ def register():
     bpy.utils.register_class(ElaraAddonPanel)
     render.register()
     ui.register()
-    
-    #bpy.utils.register_module(__name__)
-
 
 def unregister():
     bpy.utils.unregister_class(ElaraAddonPanel)
     render.unregister()
     ui.unregister()
-    
-    #bpy.utils.unregister_module(__name__)
