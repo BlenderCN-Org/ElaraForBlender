@@ -110,9 +110,10 @@ class EssExporter:
         return shaderName
 
     def AddDupliObj(self, obj, scene):
+        name = obj.name
         obj.dupli_list_create(scene)
         for dupli in obj.dupli_list:
-            self.AddMeshObj(dupli.object, scene, dupli.matrix)
+            self.AddMeshObj(dupli.object, scene, name + ':' + dupli.object.name, dupli.matrix)
         obj.dupli_list_clear()
 
     def AddBlenderObj(self, obj, scene):
@@ -123,14 +124,14 @@ class EssExporter:
         if obj.is_duplicator:
             self.AddDupliObj(obj, scene)
         else:
-            self.AddMeshObj(obj, scene, obj.matrix_world)    
+            self.AddMeshObj(obj, scene, obj.name, obj.matrix_world)    
 
-    def AddMeshObj(self, obj, scene, matrix):
+    def AddMeshObj(self, obj, scene, name, matrix):
         matName = self.AddMaterial(obj, scene)
 
         mesh = obj.to_mesh(scene, True, 'RENDER', calc_tessface=True)
         
-        elementName = obj.name
+        elementName = name
         self.writer.BeginNode("poly", elementName + "_ply")
         self.writer.AddPointList("pos_list", mesh.vertices)
         self.writer.AddIndexList("triangle_list", mesh.tessfaces)
