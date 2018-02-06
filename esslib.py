@@ -163,6 +163,8 @@ class EssExporter:
             self.AddQuadLight(obj, scene)
         elif light_type == 'POINT':
             self.AddPointLight(obj, scene)
+        elif light_type == 'SUN':
+            self.AddSun(obj, scene)
 
     def AddQuadLight(self, obj, scene):
         elementName = obj.name
@@ -204,8 +206,32 @@ class EssExporter:
 
         instName = elementName + "_inst"
         self.writer.BeginNode("instance", instName)
-        self.writer.AddBool("visible_primary", True)
+        self.writer.AddBool("visible_primary", False)
         self.writer.AddBool("cast_shadow", True)
+        self.writer.AddRef("element", elementName + "_light")
+        self.writer.AddMatrix("transform", obj.matrix_world)
+        self.writer.AddMatrix("motion_transform", obj.matrix_world)
+        self.writer.EndNode()
+
+        self.mElInstances.append(instName)
+
+    def AddSun(self, obj, scene):
+        elementName = obj.name
+
+        lamp = obj.data
+        self.writer.BeginNode("directlight", elementName + "_light")
+        self.writer.AddScaler("intensity", lamp.energy)
+        self.writer.AddEnum("face", "both")
+        self.writer.AddColor("color", lamp.color)
+        self.writer.AddScaler("hardness", 0.9998);
+        self.writer.AddInt("samples", 16)
+        self.writer.EndNode()
+
+        instName = elementName + "_inst"
+        self.writer.BeginNode("instance", instName)
+        self.writer.AddBool("visible_primary", True)
+        self.writer.AddBool("cast_shadow", False)
+        self.writer.AddBool("shadow", True)
         self.writer.AddRef("element", elementName + "_light")
         self.writer.AddMatrix("transform", obj.matrix_world)
         self.writer.AddMatrix("motion_transform", obj.matrix_world)
