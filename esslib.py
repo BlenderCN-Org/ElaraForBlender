@@ -109,11 +109,23 @@ class EssExporter:
 
         return shaderName
 
+    def AddDupliObj(self, obj, scene):
+        obj.dupli_list_create(scene)
+        for dupli in obj.dupli_list:
+            self.AddMeshObj(dupli.object, scene, dupli.matrix)
+        obj.dupli_list_clear()
+
     def AddBlenderObj(self, obj, scene):
 
         if obj.type != 'MESH':
             return
 
+        if obj.is_duplicator:
+            self.AddDupliObj(obj, scene)
+        else:
+            self.AddMeshObj(obj, scene, obj.matrix_world)    
+
+    def AddMeshObj(self, obj, scene, matrix):
         matName = self.AddMaterial(obj, scene)
 
         mesh = obj.to_mesh(scene, True, 'RENDER', calc_tessface=True)
@@ -129,8 +141,8 @@ class EssExporter:
         self.writer.BeginNode("instance", instName)
         self.writer.AddRefGroup("mtl_list", mtl_list)
         self.writer.AddRef("element", elementName + "_ply")
-        self.writer.AddMatrix("transform", obj.matrix_world)
-        self.writer.AddMatrix("motion_transform", obj.matrix_world)
+        self.writer.AddMatrix("transform", matrix)
+        self.writer.AddMatrix("motion_transform", matrix)
         self.writer.EndNode()
 
         self.mElInstances.append(instName)
